@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="SokAlike007 Hacking AI — a customizable AI chat application powered by the DevX Chat Model API." />
+  <meta name="theme-color" content="#0f172a" />
+  <title>SokAlike007 Hacking AI</title>
+
+  <!-- Favicon (inline SVG) -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='22' fill='%236366f1'/%3E%3Ctext x='50' y='68' font-size='54' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold'%3EA%3C/text%3E%3C/svg%3E" />
+
+  <!-- Markdown + Code Highlighting + Sanitizer -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.11/purify.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- App shell -->
+  <div class="app" id="app">
+
+    <!-- ============== SIDEBAR ============== -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <button class="new-chat-btn" id="newChatBtn" title="New chat">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span>New chat</span>
+        </button>
+        <button class="icon-btn sidebar-toggle" id="sidebarToggle" title="Collapse sidebar" aria-label="Collapse sidebar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+
+      <div class="search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchInput" placeholder="Search conversations..." />
+      </div>
+
+      <div class="chat-list" id="chatList">
+        <!-- Chat history items injected here -->
+      </div>
+
+      <div class="sidebar-footer">
+        <button class="footer-btn" id="importBtn" title="Import conversations">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          <span>Import</span>
+        </button>
+        <button class="footer-btn" id="exportBtn" title="Export all conversations">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          <span>Export</span>
+        </button>
+        <button class="footer-btn" id="settingsBtn" title="Settings">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ============== MAIN ============== -->
+    <main class="main" id="main">
+      <header class="topbar">
+        <button class="icon-btn menu-btn" id="menuBtn" title="Open sidebar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="topbar-title">
+          <div class="logo-dot"></div>
+          <h1 id="currentChatTitle">SokAlike007 Hacking AI</h1>
+        </div>
+        <div class="topbar-actions">
+          <button class="icon-btn" id="themeToggle" title="Toggle theme">
+            <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          </button>
+          <button class="icon-btn" id="clearChatBtn" title="Clear current chat">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <!-- ============== CHAT AREA ============== -->
+      <section class="chat-area" id="chatArea">
+        <!-- Welcome screen -->
+        <div class="welcome-screen" id="welcomeScreen">
+          <div class="welcome-logo">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/><line x1="8" y1="16" x2="8" y2="16"/><line x1="16" y1="16" x2="16" y2="16"/></svg>
+          </div>
+          <h2>Welcome to SokAlike007 Hacking AI</h2>
+          <p>Your customizable AI assistant powered by the DevX Chat Model API.</p>
+          <div class="welcome-suggestions" id="welcomeSuggestions">
+            <button class="suggestion-card" data-prompt="Explain quantum computing in simple terms">
+              <strong>Explain quantum computing</strong>
+              <span>in simple, everyday language</span>
+            </button>
+            <button class="suggestion-card" data-prompt="Write a Python function to check if a string is a palindrome">
+              <strong>Write a palindrome checker</strong>
+              <span>in Python with examples</span>
+            </button>
+            <button class="suggestion-card" data-prompt="Give me 5 creative ideas for a startup">
+              <strong>Brainstorm startup ideas</strong>
+              <span>5 creative, viable concepts</span>
+            </button>
+            <button class="suggestion-card" data-prompt="Summarize the latest trends in AI for 2025">
+              <strong>AI trends for 2025</strong>
+              <span>concise executive summary</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Messages container -->
+        <div class="messages" id="messages" hidden></div>
+      </section>
+
+      <!-- ============== INPUT BAR ============== -->
+      <footer class="input-bar">
+        <div class="input-wrapper">
+          <div class="file-previews" id="filePreviews"></div>
+          <div class="input-row">
+            <button class="icon-btn" id="attachBtn" title="Attach file">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+            <input type="file" id="fileInput" multiple hidden />
+
+            <textarea id="messageInput" placeholder="Message SokAlike007 Hacking AI..." rows="1"></textarea>
+
+            <button class="icon-btn" id="micBtn" title="Voice input">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+            </button>
+
+            <button class="send-btn" id="sendBtn" title="Send message">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+          <div class="input-hint">
+            <span id="modelBadge">deepseek-v4-flash · auto · Medium</span>
+            <span class="hint-text">Press Enter to send · Shift+Enter for new line</span>
+          </div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- ============== SETTINGS MODAL ============== -->
+  <div class="modal-overlay" id="settingsModal" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Settings</h2>
+        <button class="icon-btn" id="closeSettings" title="Close">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <div class="setting-group">
+          <label for="systemPrompt">System Prompt</label>
+          <textarea id="systemPrompt" rows="4" placeholder="You are a helpful, friendly AI assistant..."></textarea>
+          <small>Defines the AI's behavior and personality. Applied to every message.</small>
+        </div>
+
+        <div class="setting-group">
+          <label for="personality">AI Personality</label>
+          <select id="personality">
+            <option value="default">Default (Balanced)</option>
+            <option value="friendly">Friendly & Casual</option>
+            <option value="professional">Professional & Formal</option>
+            <option value="creative">Creative & Imaginative</option>
+            <option value="concise">Concise & Direct</option>
+            <option value="teacher">Patient Teacher</option>
+            <option value="dev">Senior Developer</option>
+            <option value="custom">Custom (use system prompt)</option>
+          </select>
+          <small>Quick personality presets that override the system prompt.</small>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-group">
+            <label for="modelSelect">Model</label>
+            <select id="modelSelect">
+              <option value="deepseek-v4-flash">deepseek-v4-flash (default)</option>
+              <option value="deepseek-v4">deepseek-v4</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="claude-3-5-sonnet">claude-3-5-sonnet</option>
+              <option value="claude-3-haiku">claude-3-haiku</option>
+              <option value="gemini-1.5-pro">gemini-1.5-pro</option>
+              <option value="gemini-1.5-flash">gemini-1.5-flash</option>
+              <option value="llama-3.1-70b">llama-3.1-70b</option>
+              <option value="mistral-large">mistral-large</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="providerSelect">Provider</label>
+            <select id="providerSelect">
+              <option value="auto">auto</option>
+              <option value="openai">openai</option>
+              <option value="anthropic">anthropic</option>
+              <option value="google">google</option>
+              <option value="deepseek">deepseek</option>
+              <option value="meta">meta</option>
+              <option value="mistral">mistral</option>
+              <option value="xai">xai</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-group">
+            <label for="effortSelect">Effort</label>
+            <select id="effortSelect">
+              <option value="Low">Low (faster)</option>
+              <option value="Medium" selected>Medium (balanced)</option>
+              <option value="High">High (deeper)</option>
+            </select>
+          </div>
+          <div class="setting-group">
+            <label for="streamToggle">Stream responses</label>
+            <label class="switch">
+              <input type="checkbox" id="streamToggle" />
+              <span class="slider"></span>
+            </label>
+            <small>Live-token streaming via SSE.</small>
+          </div>
+        </div>
+
+        <div class="setting-group">
+          <label for="ttsVoice">Text-to-Speech Voice</label>
+          <select id="ttsVoice"><option value="">Browser default</option></select>
+          <small>Voice used when reading AI replies aloud.</small>
+        </div>
+
+        <div class="setting-actions">
+          <button class="btn-secondary" id="resetSettings">Reset to defaults</button>
+          <button class="btn-primary" id="saveSettings">Save settings</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============== TOAST ============== -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
