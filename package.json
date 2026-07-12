@@ -1,0 +1,29 @@
+{
+  "name": "sokalike007-hacking-ai",
+  "version": "1.0.0",
+  "description": "A customizable AI chat application powered by the DevX Chat Model API. Built with vanilla HTML/CSS/JS and Vercel Serverless Functions.",
+  "private": true,
+  "author": "SokAlike007",
+  "license": "MIT",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Static project — no build step required'",
+    "start": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "keywords": [
+    "ai",
+    "chat",
+    "chatgpt",
+    "vercel",
+    "serverless",
+    "devx",
+    "ai-assistant"
+  ],
+  "dependencies": {},
+  "devDependencies": {}
+}
